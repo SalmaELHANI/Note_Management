@@ -1,3 +1,4 @@
+// models/NoteModel.js
 import mongoose from 'mongoose';
 
 const noteSchema = new mongoose.Schema({
@@ -11,6 +12,6 @@ const noteSchema = new mongoose.Schema({
     },
 });
 
-const NoteModel = mongoose.model("Note", noteSchema);
+const NoteModel = mongoose.model('Note', noteSchema);
 
-module.exports = NoteModel;
+export default NoteModel;
