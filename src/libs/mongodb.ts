@@ -14,4 +14,4 @@ const startserver = async () =>{
     }
 }
 
-export default startserver();
+export default startserver;
