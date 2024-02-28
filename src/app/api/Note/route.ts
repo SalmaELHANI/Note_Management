@@ -1,15 +1,27 @@
 import startserver from "@/libs/mongodb";
 import NoteModel from "@/models/note"
+import { NextResponse } from "next/server";
 
 
-export async function POST(req: any,res:any){
+export async function POST(req: Request){
   await startserver()
-    const {title, description}= req.body;
+    const data = await req.json();
     try{
-      const newNote = new NoteModel({title, description});
-      await newNote.save();
-      res.statut(400).json({status:'1 post has been added Successfully!'})
+       const newNote = new NoteModel(data);
+       await newNote.save();
+      return NextResponse.json({newNote})
     }catch(error: any){
       console.log(error);
     }
+}
+
+export  async function GET(req: Request) {
+  await startserver();
+  try {
+    const allNotes = await NoteModel.find();
+   return NextResponse.json({allNotes});
+  } catch (error: any) {
+    console.error(error);
+
+  }
 }
