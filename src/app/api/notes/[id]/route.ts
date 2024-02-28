@@ -4,10 +4,6 @@ import { NextResponse } from "next/server";
 
 
 
-
-
-
-
 export  async function GET(req: Request) {
     await startserver();
     const id = req.url.split("notes/")[1];
