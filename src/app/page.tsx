@@ -11,12 +11,11 @@ interface Note {
 }
 
 
-
 export default function Home() {
     const [notes, setNotes] = useState<Note[]>([]);
     const fetchData = async () => {
         try {
-            const response = await axios.get("http://localhost:3001/api/notes");
+            const response = await axios.get("http://localhost:3000/api/notes");
             setNotes(response.data.allNotes);
             console.log(response.data.allNotes);
 
