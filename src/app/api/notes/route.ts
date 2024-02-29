@@ -1,3 +1,4 @@
+
 import startserver from "@/libs/mongodb";
 import NoteModel from "@/models/note"
 import { NextResponse } from "next/server";
@@ -9,7 +10,7 @@ export async function POST(req: Request){
     try{
        const newNote = new NoteModel(data);
        await newNote.save();
-      return NextResponse.json({newNote})
+      return NextResponse.json({newNote},{status:201})
     }catch(error: any){
       console.log(error);
     }
