@@ -1,43 +1,40 @@
 "use client";
-
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 
-function EditNote() {
+function EditNote({ params }: { params: { id: string } }) {
   const router = useRouter();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-//   const fetchData = async () => {
-//     try {
-//         const response = await axios.get(`http://localhost:3000/api/notes/${id}`);
-//         setNotes(response.data.allNotes);
-//         console.log(response.data.allNotes);
+   const fetchData = async () => {
+     try {
+      console.log(params.id);
+         const response = await axios.get(`http://localhost:3000/api/notes/${params.id}`);
+         setTitle(response.data.note.title);
+         setDescription(response.data.note.description);
+         console.log(response.data.note);
 
-//     } catch (error) {
-//         console.error("Error fetching data:", error);
-//     }
-// };
+     } catch (error) {
+         console.error("Error fetching data:", error);
+     }
+ };
 
-// useEffect(() => {
-//     fetchData();
-// }, []);
+ useEffect(() => {
+     fetchData();
+ }, []);
      
 
-  const handleSubmit = async (e , id) => {
+  const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-      console.log('Submit button clicked'); // Add this line
 
-
-      if (!title.trim() || !description.trim()) {
-          return;
-      }
+      
 
       try {
-          await axios.put(`http://localhost:3000/api/notes/${id}`, { title, description });
+          await axios.put(`http://localhost:3000/api/notes/${params.id}`, { title, description });
           router.push('/');
       } catch (error) {
           console.error('Error updating note:', error);
@@ -49,7 +46,7 @@ function EditNote() {
           <div className="container p-6 bg-white shadow-xl rounded-xl w-full max-w-md">
               <h1 className="text-4xl font-bold mb-6 text-teal-500">Edit Note</h1>
 
-              <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+              <form  className="max-w-md mx-auto">
                   <div className="mb-4">
                       <label htmlFor="title" className="block text-sm font-medium text-gray-600 ">
                           Title:
@@ -80,6 +77,7 @@ function EditNote() {
 
                   <button
                       className="bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-600 focus:outline-none focus:ring focus:border-teal-300"
+                      onClick={handleSubmit}
                   >
                       Update Note
                   </button>

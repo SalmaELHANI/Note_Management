@@ -1,37 +1,57 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+'use client';
+import { createSlice, SerializedError } from '@reduxjs/toolkit';
+import { addNote, deleteNote, fetchNotes, getOneNote, updateNote } from "./noteThunk";
+
 
 interface Note {
   _id: string;
   title: string;
   description: string;
 }
-
-export const fetchNotes = createAsyncThunk<Note[]>(
-  'notes/fetchNotes',
-  async () => {
-    const response = await axios.get("http://localhost:3001/api/notes");
-    return response.data.allNotes;
-  }
-);
-
+interface NotesState {
+  note: Note[];
+  error: SerializedError | null;
+}
+const initialState: NotesState = {
+  note: [],
+  error: null,
+};
 const notesSlice = createSlice({
   name: 'notes',
-  initialState: [] as Note[],
-  reducers: {
-    addNote: (state, action) => {
-      state.push(action.payload);
-    },
-    removeNote: (state, action) => {
-      return state.filter(note => note._id !== action.payload);
-    },
-  },
-  extraReducers: (builder) => {
+  initialState,
+  reducers: {},
+  extraReducers:(builder)=>{
     builder.addCase(fetchNotes.fulfilled, (state, action) => {
-      return action.payload;
+        state.error = null;
+        state.note = action.payload;
+    }).addCase(fetchNotes.rejected, (state, action) => {
+        state.error = action.error;
     });
-  },
-});
+    
+     builder.addCase(getOneNote.fulfilled, (state, action) => {
+        state.error = null;
+        state.note = action.payload;
+    }).addCase(getOneNote.rejected, (state, action) => {
+        state.error = action.error;
+    });
+    builder.addCase(addNote.fulfilled, (state, action) => {
+        state.error = null;
+        state.note = action.payload;
+    }).addCase(addNote.rejected, (state, action) => {
+        state.error = action.error;
+    });
+    builder.addCase(updateNote.fulfilled, (state, action) => {
+        state.error = null;
+        state.note = action.payload;
+    }).addCase(updateNote.rejected, (state, action) => {
+        state.error = action.error;
+    });
+    builder.addCase(deleteNote.fulfilled, (state, action) => {
+        state.error = null;
+        state.note = action.payload;
+    }).addCase(deleteNote.rejected, (state, action) => {
+        state.error = action.error;
+    });
+}});
 
-export const { addNote, removeNote } = notesSlice.actions;
 export default notesSlice.reducer;

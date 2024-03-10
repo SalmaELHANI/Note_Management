@@ -43,25 +43,21 @@ export  async function GET(req: Request) {
 
 
   
-  export  async function PUT(req: Request) {
+  export  async function PUT(req: Request, {params} :{params:{id:string}}) {
     await startserver();
-    const id = req.url.split("notes/")[1];
-    
-    const data  = req.body;
-  
+    const {id}= params;
+    const data  = await req.json();
     try {
-      const updatedNote = await NoteModel.findByIdAndUpdate(
-        id,
-        {data },
+      const updatedNote = await NoteModel.findOneAndUpdate(
+        {_id:id},
+        data,
         { new: true }
       );
-  
       if (!updatedNote) {
         return NextResponse.json({ error: 'Note not found' });
       }
-  
-     return NextResponse.json({updatedNote });
+      return NextResponse.json({ updatedNote ,message: "Note Updated"},{status: 200});
     } catch (error: any) {
-      console.error(error);
+      return NextResponse.json({error},{status: 500})
     }
   }
