@@ -1,3 +1,4 @@
+'use client';
 import { configureStore } from '@reduxjs/toolkit';
 import noteReducer from '@/app/reduxToolkit/slices/notesSlice'; 
 

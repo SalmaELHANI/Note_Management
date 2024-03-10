@@ -1,7 +1,9 @@
 "use client";
 import Link from "next/link";
-import axios from 'axios';
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { fetchNotes, deleteNote } from "@/app/reduxToolkit/slices/noteThunk";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/app/reduxToolkit/store";
 
 
 interface Note {
@@ -12,33 +14,27 @@ interface Note {
 
 
 export default function Home() {
-    const [notes, setNotes] = useState<Note[]>([]);
+    const data = useSelector((state: any) => state.notes);
+    const notes: Note[] = data && data.note ? data.note : [];
+    const dispatch = useDispatch<AppDispatch>();
+   
     const fetchData = async () => {
-        try {
-            const response = await axios.get("http://localhost:3000/api/notes");
-            setNotes(response.data.allNotes);
-            console.log(response.data.allNotes);
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
+        dispatch(fetchNotes());
+        console.log(notes);
+        
     };
 
     useEffect(() => {
+        console.log(data);
+        
         fetchData();
-    }, []);
+    }, [dispatch]);
 
-    const handleDelete = async (id: String) => {
-        try {
-            await axios.delete(`http://localhost:3001/api/notes/${id}`);
-            fetchData();
-        } catch (error) {
-            console.log(error);
-        }
-
-    };
-
-
+    
+    const handleDelete = async (id: string) => {
+        await dispatch(deleteNote({ id }));
+        fetchData();
+    }
 
     return (
         <main className="container mb-32 mt-6 ">

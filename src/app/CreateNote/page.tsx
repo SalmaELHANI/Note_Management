@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import React from 'react'
 import Link from "next/link";
 import axios from 'axios';
-import { useEffect, useState } from "react";
+import {useState } from "react";
 
 
 
@@ -16,7 +16,7 @@ function CreateNote() {
     const router = useRouter();
 
   
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
   
       if (!title.trim() || !description.trim()) {
